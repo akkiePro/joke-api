@@ -32,9 +32,20 @@ public class JokesController {
     }
 
     /**
+     * @apiNote insert jokes in DB
+     * @param jokes
+     * @return result of joke insertion in DB
+     */
+//    @PostMapping("addJokes")
+//    public String addMultipleJokes(@RequestBody List<String> jokes) {
+//        return jokesService.insertJokes(jokes);
+//    }
+
+    /**
      * @apiNote fetch all the jokes stored in DB
      * @return List of jokes in JSON format
      */
+    @CrossOrigin
     @GetMapping(value = "allJokes", produces = {"application/json"})
     public ResponseEntity<List<Jokes>> showAllJokes() {
         return jokesService.getAllJokes();

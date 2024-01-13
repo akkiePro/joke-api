@@ -70,4 +70,15 @@ public class JokesService {
         jokesDAO.save(joke);
         return "success";
     }
+
+    /**
+     * insert a Joke in DB
+     * @param joke
+     * @return result of insertion in DB
+     */
+//    public String insertJokes(List<String> jokes) {
+//        System.out.println(jokes);
+////        jokesDAO.saveAll(jokes);
+//        return "success";
+//    }
 }
