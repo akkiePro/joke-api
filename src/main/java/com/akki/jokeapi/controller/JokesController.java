@@ -51,6 +51,16 @@ public class JokesController {
     }
 
     /**
+     * @apiNote fetch one joke from DB
+     * @return String of joke
+     */
+    @CrossOrigin
+    @GetMapping(value = "getOneJoke", produces = {"application/json"})
+    public ResponseEntity<List<String>> showOneJoke() {
+        return jokesService.getOneJoke();
+    }
+
+    /**
      * @apiNote fetch jokes by category such as general, programming etc.
      * @param category
      * @return

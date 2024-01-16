@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * JokesService is a service layer of JokesController
@@ -32,19 +33,65 @@ public class JokesService {
     public ResponseEntity<List<String>> getAllJokes() {
         logger.info("Entered ::JokesService.getAllJokes()::");
         try {
-            List<Jokes> allJokes = jokesDAO.findAll();
+            List<String> allJokes = fetchAllJokes();
             logger.info("JokesService.getAllJokes():: allJokes = {}", allJokes);
-            List<String> onlyAllJokes = allJokes.stream()
-                    .map(Jokes::getJoke)
-                    .toList();
-//            System.out.println("all Jokes hahaha" + onlyAllJokes);
-            return new ResponseEntity<>(onlyAllJokes, HttpStatus.OK);
+//            System.out.println("all Jokes hahaha" + allJokes);
+            return new ResponseEntity<>(allJokes, HttpStatus.OK);
         }catch (Exception e) {
             logger.error("JokesService.getAllJokes() threw an Exception");
             e.printStackTrace();
         }
         logger.info("Entered ::JokesService.getAllJokes()::");
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+    }
+
+    private List<String> fetchAllJokes() {
+        logger.info("Entered JokesService.fetchAllJokes()");
+        List<Jokes> allJokes = jokesDAO.findAll();
+        List<String> onlyAllJokes = allJokes.stream()
+                .map(Jokes::getJoke)
+                .toList();
+
+        logger.info("Exited JokesService.fetchAllJokes()");
+        return onlyAllJokes;
+    }
+
+    private List<String> getOneRandomJoke(List<String> onlyAllJokes) {
+        logger.info("Entered JokesService.getOneRandomJoke()");
+        List<String> randomJoke = new ArrayList<>();
+        // Check if the list is not empty
+        if (onlyAllJokes != null && !onlyAllJokes.isEmpty()) {
+            // Create an instance of the Random class
+            Random random = new Random();
+
+            // Generate a random index within the size of the list
+            int randomIndex = random.nextInt(onlyAllJokes.size());
+
+            logger.info("Exited JokesService.getOneRandomJoke():: randomJoke = {}", onlyAllJokes.get(randomIndex));
+            randomJoke.add(onlyAllJokes.get(randomIndex));
+            return randomJoke;
+        }
+        logger.info("Exited JokesService.getOneRandomJoke():: empty List");
+        return randomJoke;
+    }
+
+    /**
+     * joke from List of all Jokes of JokesDAO
+     * @return ResponseEntity of String
+     */
+    public ResponseEntity<List<String>> getOneJoke() {
+        logger.info("Entered ::JokesService.getOneJokes()");
+        try {
+            List<String> allJokes = fetchAllJokes();
+            List<String> joke = getOneRandomJoke(allJokes);
+            logger.info("Exited ::JokesService.getOneJokes()");
+            return new ResponseEntity<>(joke, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("JokesService.getOneJoke() threw an Exception");
+            e.printStackTrace();
+        }
+        logger.info("Exited ::JokesService.getOneJokes():: with error");
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     /**
