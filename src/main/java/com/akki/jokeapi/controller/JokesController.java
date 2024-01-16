@@ -33,7 +33,6 @@ public class JokesController {
 
     /**
      * @apiNote insert jokes in DB
-     * @param jokes
      * @return result of joke insertion in DB
      */
     @PostMapping("addJokes")
