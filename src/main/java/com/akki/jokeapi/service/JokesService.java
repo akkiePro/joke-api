@@ -1,5 +1,6 @@
 package com.akki.jokeapi.service;
 
+import com.akki.jokeapi.controller.JokesList;
 import com.akki.jokeapi.dao.JokesDAO;
 import com.akki.jokeapi.entity.Jokes;
 import org.slf4j.Logger;
@@ -28,12 +29,16 @@ public class JokesService {
      * List of all Jokes from JokesDAO
      * @return ResponseEntity of List
      */
-    public ResponseEntity<List<Jokes>> getAllJokes() {
+    public ResponseEntity<List<String>> getAllJokes() {
         logger.info("Entered ::JokesService.getAllJokes()::");
         try {
             List<Jokes> allJokes = jokesDAO.findAll();
             logger.info("JokesService.getAllJokes():: allJokes = {}", allJokes);
-            return new ResponseEntity<>(allJokes, HttpStatus.OK);
+            List<String> onlyAllJokes = allJokes.stream()
+                    .map(Jokes::getJoke)
+                    .toList();
+//            System.out.println("all Jokes hahaha" + onlyAllJokes);
+            return new ResponseEntity<>(onlyAllJokes, HttpStatus.OK);
         }catch (Exception e) {
             logger.error("JokesService.getAllJokes() threw an Exception");
             e.printStackTrace();
@@ -72,13 +77,20 @@ public class JokesService {
     }
 
     /**
-     * insert a Joke in DB
-     * @param joke
+     * this method is for built-in 268 general jokes
      * @return result of insertion in DB
      */
-//    public String insertJokes(List<String> jokes) {
-//        System.out.println(jokes);
-////        jokesDAO.saveAll(jokes);
-//        return "success";
-//    }
+    public String insertJokes() {
+        List<Jokes> jokesList = new ArrayList<>();
+
+        for (String builtInJoke : JokesList.jokes) {
+            Jokes joke = new Jokes();
+            joke.setJType("general");
+            joke.setJoke(builtInJoke);
+            jokesList.add(joke);
+        }
+
+        jokesDAO.saveAll(jokesList);
+        return "success";
+    }
 }

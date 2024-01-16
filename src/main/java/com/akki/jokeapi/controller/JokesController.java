@@ -36,10 +36,10 @@ public class JokesController {
      * @param jokes
      * @return result of joke insertion in DB
      */
-//    @PostMapping("addJokes")
-//    public String addMultipleJokes(@RequestBody List<String> jokes) {
-//        return jokesService.insertJokes(jokes);
-//    }
+    @PostMapping("addJokes")
+    public String addMultipleJokes() {
+        return jokesService.insertJokes();
+    }
 
     /**
      * @apiNote fetch all the jokes stored in DB
@@ -47,7 +47,7 @@ public class JokesController {
      */
     @CrossOrigin
     @GetMapping(value = "allJokes", produces = {"application/json"})
-    public ResponseEntity<List<Jokes>> showAllJokes() {
+    public ResponseEntity<List<String>> showAllJokes() {
         return jokesService.getAllJokes();
     }
 
